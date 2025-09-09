@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Para Mi Amor 💖</title>
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body {
+      height: 100%;
+      font-family: 'Great Vibes', cursive;
+      background: linear-gradient(135deg, #ffc0cb, #ffe4e1);
+      overflow: hidden;
+    }
+
+    .page {
+      width: 100vw; height: 100vh;
+      position: absolute; top: 0; left: 100%;
+      display: flex; flex-direction: column;
+      justify-content: center; align-items: center;
+      text-align: center; padding: 2rem;
+      transition: left 0.8s cubic-bezier(0.77, 0, 0.175, 1);
+      opacity: 0; z-index: 1;
+    }
+    .page.active { left: 0; opacity: 1; }
+
+    h1 { font-size: 4rem; color: #c71585; text-shadow: 2px 2px 5px #ffffffa0; }
+    p { font-size: 1.8rem; color: #800040; max-width: 600px; margin-top: 1rem; }
+
+    button {
+      margin-top: 2rem; padding: 1rem 2rem;
+      font-size: 1.2rem; font-family: 'Georgia', serif;
+      background: #ff69b4; color: white;
+      border: none; border-radius: 20px;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      transition: transform 0.3s, background 0.3s;
+    }
+    button:hover { background: #ff1493; transform: scale(1.05); }
+
+    /* Corazones */
+    .heart {
+      position: absolute; width: 20px; height: 20px;
+      background: red; transform: rotate(45deg);
+      animation: float 10s infinite ease-in;
+      opacity: 0.6; z-index: 0;
+    }
+    .heart::before, .heart::after {
+      content: ''; position: absolute;
+      width: 20px; height: 20px;
+      background: red; border-radius: 50%;
+    }
+    .heart::before { top: -10px; left: 0; }
+    .heart::after { top: 0; left: -10px; }
+
+    @keyframes float {
+      0% { transform: translateY(90vh) rotate(45deg); opacity: 0; }
+      20% { opacity: 0.6; }
+      100% { transform: translateY(-10vh) rotate(45deg); opacity: 0; }
+    }
+
+    @media (max-width: 600px) {
+      h1 { font-size: 2.5rem; }
+      p { font-size: 1.3rem; max-width: 90%; }
+      button { padding: 0.8rem 1.5rem; font-size: 1rem; }
+      .heart { width: 15px; height: 15px; }
+      .heart::before, .heart::after { width: 15px; height: 15px; }
+      .heart::before { top: -7.5px; }
+      .heart::after { left: -7.5px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="page active" id="page1">
+    <h1>Hola Mary🌷</h1>
+    <p>Quiero regalarte unas palabras llenas de ánimo, porque sé lo valiosa y fuerte que eres.</p>
+    <button onclick="nextPage()">Ver más</button>
+  </div>
+
+  <div class="page" id="page2">
+    <h1>Eres increíble 💎</h1>
+    <p>A veces olvidas todo lo que has logrado, pero quiero recordarte que eres una persona especial y capaz de superar cualquier reto.</p>
+    <button onclick="nextPage()">Siguiente</button>
+  </div>
+
+  <div class="page" id="page3">
+    <h1>No te rindas 🌈</h1>
+    <p>Los días difíciles no duran para siempre. Confía en ti, porque tienes dentro una fuerza enorme que te llevará muy lejos.</p>
+    <button onclick="nextPage()">Última</button>
+  </div>
+
+  <div class="page" id="page4">
+    <h1>Siempre cuentas conmigo 🤗</h1>
+    <p>No estás sola. Aquí me tienes para apoyarte y recordarte lo valiosa que eres. ¡Ánimo amiga, lo mejor está por venir! 💖</p>
+    <button onclick="restart()">Volver a leer</button>
+  </div>
+
+  <!-- Música de fondo -->
+  <audio id="bg-music" loop>
+    <source src="tiroteo.mp3" type="audio/mpeg">
+    Tu navegador no soporta audio.
+  </audio>
+
+  <script>
+    // Corazones
+    const totalHearts = 50;
+    for (let i = 0; i < totalHearts; i++) {
+      const heart = document.createElement('div');
+      heart.className = 'heart';
+      heart.style.left = Math.random() * 100 + 'vw';
+      heart.style.animationDuration = (7 + Math.random() * 8) + 's';
+      heart.style.animationDelay = Math.random() * 5 + 's';
+      heart.style.opacity = 0;
+      heart.style.transform = `scale(${0.5 + Math.random() * 0.8}) rotate(45deg)`;
+      document.body.appendChild(heart);
+    }
+
+    // Navegación
+    let currentPage = 1;
+    const totalPages = 4;
+    const pages = document.querySelectorAll('.page');
+    function showPage(pageNumber) {
+      pages.forEach((page, index) => {
+        page.classList.toggle('active', index + 1 === pageNumber);
+      });
+    }
+    function nextPage() {
+      if (currentPage < totalPages) {
+        currentPage++;
+        showPage(currentPage);
+      }
+    }
+    function restart() {
+      currentPage = 1;
+      showPage(currentPage);
+    }
+    document.addEventListener('DOMContentLoaded', () => showPage(currentPage));
+
+    // Música: empieza al tocar/clic en cualquier parte
+    const audio = document.getElementById("bg-music");
+    let musicStarted = false;
+
+    function startMusic() {
+      if (!musicStarted) {
+        audio.play();
+        musicStarted = true;
+      }
+    }
+
+    document.body.addEventListener("click", startMusic);
+    document.body.addEventListener("touchstart", startMusic);
+  </script>
+
+</body>
+</html>
